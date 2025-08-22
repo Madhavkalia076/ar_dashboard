@@ -88,6 +88,7 @@ Here are the main routes available:
     }
   ]
   ```
+  ![Dashboard Screenshot](5th.png)
 
 ### 4. kpis
 
