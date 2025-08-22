@@ -41,6 +41,8 @@ By combining these, the dashboard helps monitor pending, paid, and overdue invoi
 ## API Routes
 
 Here are the main routes available:
+-main page
+![Dashboard Screenshot](ist.png)
 
 ### 1. Customers
 
@@ -52,6 +54,7 @@ Here are the main routes available:
     { "customer_id": 2, "name": "Bob Smith" }
   ]
   ```
+  ![Dashboard Screenshot](4th.png)
 
 ### 2. Invoices
 
@@ -63,6 +66,7 @@ Here are the main routes available:
     { "invoice_id": 2, "customer_id": 2, "amount": 750.0, "status": "Paid" }
   ]
   ```
+  ![Dashboard Screenshot](3rd.png)
 
 ### 3. top5
 
@@ -88,10 +92,7 @@ Here are the main routes available:
 ### 4. kpis
 
 - **`/kpis`** (GET) Returns KPI metrics (e.g., totals, overdue amounts, etc.)..
-
-  ```
-
-  ```
+  ![Dashboard Screenshot](2nd.png)
 
 ---
 
