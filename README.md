@@ -4,9 +4,9 @@ This project is a simple **Accounts Receivable (AR) Dashboard** built with **Fla
 
 The system revolves around three key parts:
 
-1. **Customers** â†’ People or companies who buy services/products.
-2. **Invoices** â†’ Bills raised for customers.
-3. **Payments** â†’ Records of money received against invoices.
+1. **Customers** People or companies who buy services/products.
+2. **Invoices** Bills raised for customers.
+3. **Payments** Records of money received against invoices.
 
 By combining these, the dashboard helps monitor pending, paid, and overdue invoices.
 
@@ -44,7 +44,7 @@ Here are the main routes available:
 
 ### 1. Customers
 
-- **`/customers`** (GET) â†’ Returns a list of all customers with their IDs and names.
+- **`/customers`** (GET) Returns a list of all customers with their IDs and names.
 - Example Response:
   ```json
   [
@@ -55,7 +55,7 @@ Here are the main routes available:
 
 ### 2. Invoices
 
-- **`/invoices`** (GET) â†’ Returns all invoices with details such as amount, status, and due date.
+- **`/invoices`** (GET) Returns all invoices with details such as amount, status, and due date.
 - Example Response:
   ```json
   [
@@ -66,7 +66,7 @@ Here are the main routes available:
 
 ### 3. top5
 
-- **`/top5`** (GET) â†’ Returns all top5 payments that have been recorded against invoices.
+- **`/top5`** (GET) Returns all top5 payments that have been recorded against invoices.
 - Example Response:
   ```json
   [
@@ -85,9 +85,9 @@ Here are the main routes available:
   ]
   ```
 
-### 4. top5
+### 4. kpis
 
-- **`/kpis`** (GET) â†’ Returns KPI metrics (e.g., totals, overdue amounts, etc.)..
+- **`/kpis`** (GET) Returns KPI metrics (e.g., totals, overdue amounts, etc.)..
 
   ```
 
