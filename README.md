@@ -1,65 +1,145 @@
-# Accounts Receivable Dashboard (MySQL + Python/Flask)
+# Accounts Receivable Dashboard
 
-A minimal AR dashboard with:
-- MySQL schema + seed data
-- Flask APIs (parameterized)
-- Aging bucket utility + unit tests
-- Single-page UI with filters, KPIs, invoice table, and a Top-5 chart
+This project is a simple **Accounts Receivable (AR) Dashboard** built with **Flask (Python)** and **MySQL**. The main goal is to help track customers, invoices, and payments in a structured way. It provides REST API endpoints that allow you to interact with the data easily.
 
-## 1) Setup MySQL
+The system revolves around three key parts:
 
-```sql
-SOURCE schema.sql;
-SOURCE seed.sql;
-```
+1. **Customers** â†’ People or companies who buy services/products.
+2. **Invoices** â†’ Bills raised for customers.
+3. **Payments** â†’ Records of money received against invoices.
 
-> Ensure your MySQL user/password can access the `ar_dashboard` database.
+By combining these, the dashboard helps monitor pending, paid, and overdue invoices.
 
-## 2) Configure and run backend (Python 3.10+)
+---
 
-```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/Mac:
-source .venv/bin/activate
+## How the Project Works
 
-pip install -r requirements.txt
+1. **Database Setup**
 
-# Optionally export DB credentials
-# PowerShell
-$env:DB_HOST="localhost"; $env:DB_USER="root"; $env:DB_PASSWORD="yourpassword"; $env:DB_NAME="ar_dashboard"
-# bash
-export DB_HOST=localhost DB_USER=root DB_PASSWORD=yourpassword DB_NAME=ar_dashboard
+   - The project uses a MySQL database named `ar_dashboard`.
+   - It has three main tables:
+     - `customers` â†’ Stores customer info like name, email, and phone.
+     - `invoices` â†’ Stores invoice details like amount, due date, and status.
+     - `payments` â†’ Tracks payments received for invoices.
+   - Foreign key relationships ensure that invoices link to customers, and payments link to invoices.
 
-python app.py
-```
+2. **Flask Backend**
 
-The app runs on http://localhost:5000
+   - A Flask server is used to provide API routes.
+   - When you hit a route, Flask connects to MySQL using `mysql.connector` and fetches or inserts data.
+   - Responses are returned in **JSON** format.
 
-## 3) UI
-Open `http://localhost:5000/` in your browser.
-- Filters: Customer + Invoice date range
-- KPIs: Total Invoiced, Received, Outstanding, % Overdue
-- Table: sortable, client-side search, overdue rows highlighted
-- Action: **Record Payment** (partial allowed)
-- Chart: Top 5 customers by total outstanding
+3. **Purpose**
+   - Helps businesses keep track of:
+     - Who owes them money (Pending invoices)
+     - Which invoices are overdue
+     - Which customers have paid
+     - How much payment has been received
 
-## 4) API Endpoints
+---
 
-- `GET /customers` → list customers
-- `GET /invoices?customer_id=&start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`
-- `GET /kpis?customer_id=&start_date=&end_date=`
-- `GET /top5`
-- `POST /payments` → JSON `{ "invoice_id": 1, "payment_date": "2025-08-20", "amount": 1000.0 }`
+## API Routes
 
-All queries are parameterized.
+Here are the main routes available:
 
-## 5) Tests
+### 1. Customers
 
-```bash
-python -m unittest tests/test_aging.py
-```
+- **`/customers`** (GET) â†’ Returns a list of all customers with their IDs and names.
+- Example Response:
+  ```json
+  [
+    { "customer_id": 1, "name": "Alice Johnson" },
+    { "customer_id": 2, "name": "Bob Smith" }
+  ]
+  ```
 
-## Notes
-- Aging bucket is computed only on **unpaid portion** and only if `due_date < today`.
-- Overpayment checks are basic; extend as needed.
+### 2. Invoices
+
+- **`/invoices`** (GET) â†’ Returns all invoices with details such as amount, status, and due date.
+- Example Response:
+  ```json
+  [
+    { "invoice_id": 1, "customer_id": 1, "amount": 500.0, "status": "Pending" },
+    { "invoice_id": 2, "customer_id": 2, "amount": 750.0, "status": "Paid" }
+  ]
+  ```
+
+### 3. top5
+
+- **`/top5`** (GET) â†’ Returns all top5 payments that have been recorded against invoices.
+- Example Response:
+  ```json
+  [
+    {
+      "payment_id": 1,
+      "invoice_id": 2,
+      "amount": 750.0,
+      "method": "Credit Card"
+    },
+    {
+      "payment_id": 2,
+      "invoice_id": 3,
+      "amount": 100.0,
+      "method": "Bank Transfer"
+    }
+  ]
+  ```
+
+### 4. top5
+
+- **`/kpis`** (GET) â†’ Returns KPI metrics (e.g., totals, overdue amounts, etc.)..
+
+  ```
+
+  ```
+
+---
+
+## How Routes Work
+
+- When you send a request to `/customers`, Flask runs a SQL query like:
+
+  ```sql
+  SELECT customer_id, name FROM customers ORDER BY name;
+  ```
+
+  and sends back the result as JSON.
+
+- For `/invoices`, it pulls all invoice rows and shows customer linkage.
+
+- For `/top5`, it fetches all payments and shows top5 customers.
+
+This way, the API serves as a bridge between the MySQL database and any frontend/dashboard you want to build on top of it.
+
+---
+
+## Running the Project
+
+1. Install dependencies:
+
+   ```bash
+   pip install flask flask-cors mysql-connector-python python-dotenv
+   ```
+
+2. Make sure MySQL is running and youâ€™ve created the database:
+
+   ```sql
+   CREATE DATABASE ar_dashboard;
+   ```
+
+3. Run the Flask app:
+
+   ```bash
+   python app.py
+   ```
+
+4. Visit the API in your browser or use a tool like Postman:
+   - `http://127.0.0.1:5000/customers`
+   - `http://127.0.0.1:5000/invoices`
+   - `http://127.0.0.1:5000/payments`
+
+---
+
+## Summary
+
+This project is a **mini accounting backend**. It keeps track of customers, invoices, and payments. The Flask APIs let you query this data easily, so it can be used to build dashboards or reports.
